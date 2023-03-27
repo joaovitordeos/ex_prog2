@@ -1,6 +1,7 @@
 /*
  * Exercicios da disciplina de Prog2 - Manipulacao de Strings
  * Autor: Joao Vitor de Oliveira Souza
+ * 2,7,9,10
  */
 #include <string.h>
 #include <stdio.h>
@@ -8,6 +9,8 @@
 
 #define MAX_SIZE 200
 #define FIM_LINHA '\0'
+#define COLC_ABERTO 91
+#define COLC_FECHADO 93
 
 /* Funcao auxiliar da 'inverte_str'. */
 int inverte_aux(char *s, int ini){
@@ -18,12 +21,12 @@ int inverte_aux(char *s, int ini){
     putchar(s[ini]);
 }
 
-/* Imprime a string s ao contrario. */
+/* Ex.1 Imprime a string s ao contrario. */
 int inverte_str(char *s){
     return inverte_aux(s, 0);
 }
 
-/* Retorna um inteiro com o valor do tamanho da string. */
+/* Ex.2 Retorna um inteiro com o valor do tamanho da string. */
 int tam_str(char *s){
     int i;
     
@@ -33,10 +36,11 @@ int tam_str(char *s){
     return i;
 }
 
-/* Converte as letras minusculas em maiusculas de acordo com a tabela ASCII. */
+/* Ex.3 Converte as letras minusculas em maiusculas de acordo com a tabela ASCII. */
 int maiuscula_str(char *s){
     int i, proxChar;
-    
+   
+
     i = 0;
     proxChar = i + 1;
     while(s[proxChar]!=FIM_LINHA) {
@@ -50,7 +54,55 @@ int maiuscula_str(char *s){
     return 0;
 }
 
-/* Verifica se ha ocorrencia de s1 apartir de ini em s2. */
+/* Ex.6 Verifica se o tipo do char eh uma letra, num. ou espaco.
+   Retorna 1 se eh do grupo citado o 0 caso contrario. */
+int verif_char(char c){
+	/* Espacos */
+	if (c == 32)
+		return 1;
+	/* Numeros */
+	if (c <= 57 && c >= 48)
+		return 1;
+	/* Letras de A-Za-z */
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+		return 1;
+	/* caso nao seja nenhum dos casos acima, retorna 0. */
+	return 0;
+}
+
+/* Ex.6 'Abre' um espaco no indice indicado, passando todos char a um indice a frente. */
+int expande_str(char *s, int idc){
+	int i, tamStr;
+	char aux;
+	
+	tamStr = tam_str(s);
+
+	for (i=tamStr;i>idc;i--)
+		s[i] = s[i-1];
+}
+
+/* Ex.6 Coloca em '[]' caracteres que não sejam letras, num. ou empacos. */
+int acrescenta_colchetes(char *s){
+	int i, tamStr;
+
+	tamStr = tam_str(s);
+	i = 0;
+
+	while (i<tamStr){
+		if (!verif_char(s[i])){
+			expande_str(s, i);
+			s[i] = COLC_ABERTO;
+			i+=2;
+			tamStr++;
+		}	
+		else {
+			i++;
+		}
+		
+	}
+}
+
+/* Ex.8 Verifica se ha ocorrencia de s1 apartir de ini em s2. */
 int verifica_ocorrencia(char *s1, char *s2, int ini, int tamS1){
     int i, j;
     
@@ -61,7 +113,7 @@ int verifica_ocorrencia(char *s1, char *s2, int ini, int tamS1){
             return 0;
 }
 
-/* Busca a primeira ocorrencia da string s1 na s2, retornando o indice 
+/* Ex.8 Busca a primeira ocorrencia da string s1 na s2, retornando o indice 
    de inicio da ocorrencia. */
 int busca_ocorrencia(char *s1, char *s2){
     int tamS1, tamS2, i, j;
@@ -85,7 +137,7 @@ int main () {
     char *s1, *s2;
     s1 = malloc(sizeof(char)*MAX_SIZE);
     s2 = malloc(sizeof(char)*MAX_SIZE);
-    
+		
     fgets(s1, MAX_SIZE, stdin);
     fgets(s2, MAX_SIZE, stdin);
     
@@ -95,7 +147,10 @@ int main () {
     //printf("\n%d", tam_str(textOriginal));
     
     //maiuscula_str(textOriginal);
-    //puts(textOriginal);
+    acrescenta_colchetes(s1);
+	acrescenta_colchetes(s2);
+	puts(s1);
+	puts(s2);
 
     return 0;
 }
