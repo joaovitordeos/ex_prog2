@@ -1,3 +1,7 @@
+/*
+ * Exercicios da disciplina de Prog2 - Manipulacao de Strings
+ * Autor: Joao Vitor de Oliveira Souza
+ */
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
