@@ -1,7 +1,3 @@
-/*
- * Exercicios da disciplina de Prog2 - Manipulacao de Strings
- * Autor: Joao Vitor de Oliveira Souza
- */
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,6 +48,13 @@ int maiuscula_str(char *s){
 
 /* Verifica se ha ocorrencia de s1 apartir de ini em s2. */
 int verifica_ocorrencia(char *s1, char *s2, int ini, int tamS1){
+    int i, j;
+    
+    for (i=0, j=ini; i<tamS1 ; i++, j++)
+        if ( (s2[j] == s1[i]) && (i == (tamS1-1)) )
+            return 1;
+        if (s2[j] != s1[i])
+            return 0;
 }
 
 /* Busca a primeira ocorrencia da string s1 na s2, retornando o indice 
@@ -67,23 +70,28 @@ int busca_ocorrencia(char *s1, char *s2){
     if (tamS1 > tamS2)
         return -1;
         
-    for (i=0; i<tamS2 ; i++){
-        if (s2[0] == s1[0])
-            verifica_ocorrencia(s1, s2);
-    }
+    for (i=0; i<tamS2 ; i++)
+        if (s2[i] == s1[0])
+            if (verifica_ocorrencia(s1, s2, i, tamS1))
+                return i;
+    return -1;
 }
 
 int main () {
-    char *textOriginal;
-    textOriginal = malloc(sizeof(char)*MAX_SIZE);
+    char *s1, *s2;
+    s1 = malloc(sizeof(char)*MAX_SIZE);
+    s2 = malloc(sizeof(char)*MAX_SIZE);
     
-    fgets(textOriginal, MAX_SIZE, stdin);
+    fgets(s1, MAX_SIZE, stdin);
+    fgets(s2, MAX_SIZE, stdin);
+    
+    printf("\n%d\n", busca_ocorrencia(s1, s2));
     
     //inverte_str(textOriginal);
     //printf("\n%d", tam_str(textOriginal));
     
     //maiuscula_str(textOriginal);
-    puts(textOriginal);
+    //puts(textOriginal);
 
     return 0;
 }
