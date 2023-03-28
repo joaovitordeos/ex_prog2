@@ -90,8 +90,8 @@ int acrescenta_colchetes(char *s){
 
 	while (i<tamStr){
 		if (!verif_char(s[i])){
-			expande_str(s, i);
 			s[i] = COLC_ABERTO;
+			expande_str(s, i);
 			i+=2;
 			tamStr++;
 		}	
@@ -142,7 +142,7 @@ int main () {
     fgets(s2, MAX_SIZE, stdin);
     
     printf("\n%d\n", busca_ocorrencia(s1, s2));
-    
+
     //inverte_str(textOriginal);
     //printf("\n%d", tam_str(textOriginal));
     
@@ -151,6 +151,7 @@ int main () {
 	acrescenta_colchetes(s2);
 	puts(s1);
 	puts(s2);
+
 
     return 0;
 }
