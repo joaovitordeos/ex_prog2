@@ -144,6 +144,19 @@ int busca_ocorrencia(char *s1, char *s2){
     return -1;
 }
 
+/* Verifica se a string s eh palindromo
+   Retorna 1 se for caso ou 0 caso contrario. */
+int palindromo(char *s){
+    int i, j, tamStr;
+
+    tamStr = tam_str(s) - 1;
+    
+    for (i=tamStr, j = 0; i!=0 ; i--, j++ )
+        if (s[i] != s[j])
+            return 0;
+    return 1;
+}
+
 int main () {
     char *s1, *s2;
     s1 = malloc(sizeof(char)*MAX_SIZE);
@@ -160,8 +173,13 @@ int main () {
     //printf("\n%d", tam_str(textOriginal));
     
     //maiuscula_str(textOriginal);
-    acrescenta_colchetes(s1);
+    //acrescenta_colchetes(s1);
 	//acrescenta_colchetes(s2);
+    if (palindromo(s1))
+        printf("Eh palindromo\n");
+    else
+        printf("Nao eh palindromo\n");
+    
     puts(s1);
     printf("\n%d %ld\n", tam_str(s1), strlen(s1));
 	//puts(s2);
