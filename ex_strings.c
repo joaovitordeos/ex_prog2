@@ -1,6 +1,7 @@
-/*
+/* 
  * Exercicios da disciplina de Prog2 - Manipulacao de Strings
  * Autor: Joao Vitor de Oliveira Souza
+ * 27/03/23
  * 2,7,9,10
  */
 #include <string.h>
@@ -8,9 +9,10 @@
 #include <stdlib.h>
 
 #define MAX_SIZE 200
-#define FIM_LINHA '\0'
+#define FIM_LINHA 0
 #define COLC_ABERTO 91
 #define COLC_FECHADO 93
+#define NEWLINE 10
 
 /* Funcao auxiliar da 'inverte_str'. */
 int inverte_aux(char *s, int ini){
@@ -31,8 +33,7 @@ int inverte_str(char *s){
 int tam_str(char *s){
     int i;
     
-    for (i=0; s[i]!=FIM_LINHA ; i++ );
-    i--;
+    for (i=0; s[i]!=FIM_LINHA; i++ );
     
     return i;
 }
@@ -55,7 +56,7 @@ int maiuscula_str(char *s){
     return 0;
 }
 
-/* Ex.6 Verifica se o tipo do char eh uma letra, num. ou espaco.
+/* Ex.7 Verifica se o tipo do char eh uma letra, num. ou espaco.
    Retorna 1 se eh do grupo citado o 0 caso contrario. */
 int verif_char(char c){
 	/* Espacos */
@@ -67,18 +68,20 @@ int verif_char(char c){
 	/* Letras de A-Za-z */
 	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
 		return 1;
+    if ((c == COLC_ABERTO) || (c == COLC_FECHADO) || (c == NEWLINE))
+        return 1;
 	/* caso nao seja nenhum dos casos acima, retorna 0. */
-	return 0;
+    return 0;
 }
 
 /* Ex.7 'Abre' um espaco no indice indicado, passando todos char a um indice a frente. */
 int expande_str(char *s, int idc, int rep){
 	int i, j, tamStr;
 	
-	tamStr = tam_str(s);
+    // Acrescenta 1 no tamanho da string para acessar o caractere nulo no laco
+	tamStr = tam_str(s)+1;
 
     for (i=0;i<rep;i++){
-        puts(s);
 	    for (j=tamStr;j>idc;j--)
 		    s[j] = s[j-1];
         idc++;
@@ -87,7 +90,7 @@ int expande_str(char *s, int idc, int rep){
     return 1;
 }
 
-/* Ex.7 Coloca em '[]' caracteres que não sejam letras, num. ou empacos. */
+/* Ex.7 Coloca em '[]' caracteres que não sejam letras, num. ou espacos. */
 int acrescenta_colchetes(char *s){
 	int i, tamStr;
 
@@ -96,12 +99,12 @@ int acrescenta_colchetes(char *s){
 
 	while (i<tamStr){
 		if (!verif_char(s[i])){
-			expande_str(s, i, 3);
+			expande_str(s, i, 2);
 			s[i] = COLC_ABERTO;
             s[i+2] = COLC_FECHADO;
  			i+=2;
-			tamStr+=3;
-		}
+			tamStr+=2;
+		} 
         else	
 		    i++;
 	}
@@ -147,6 +150,8 @@ int main () {
     //s2 = malloc(sizeof(char)*MAX_SIZE);
 		
     fgets(s1, MAX_SIZE, stdin);
+    // Remove o '\n' da string e coloca '\0' em seu lugar
+    s1[strlen(s1)-1] = 0;
     //fgets(s2, MAX_SIZE, stdin);
     
     //printf("\n%d\n", busca_ocorrencia(s1, s2));
@@ -157,10 +162,12 @@ int main () {
     //maiuscula_str(textOriginal);
     acrescenta_colchetes(s1);
 	//acrescenta_colchetes(s2);
-	puts(s1);
-    printf("\n%d\n", tam_str(s1));
+    puts(s1);
+    printf("\n%d %ld\n", tam_str(s1), strlen(s1));
 	//puts(s2);
 
-
+    free(s1);
+    //free(s2);
+    
     return 0;
 }
