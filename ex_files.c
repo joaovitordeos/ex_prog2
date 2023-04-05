@@ -83,7 +83,7 @@ float media_arqv(FILE *a){
 
 /* Verifica se o caractere eh minusculo. */
 int verifica_char(char c){
-    if ( (c >= 97 && c <= 122))
+    if ( (c >= 97 && c <= 122)) // se esta entre o intervalo de letras minuc. em ASCII
         return 1;
     return 0;
 }
@@ -100,23 +100,24 @@ int converte_txt_maiusc(FILE *a1, FILE *a2){
             fputc(c-32, a2);
         else
             fputc(c, a2);
+        c = fgetc(a1);
     }
 
     return 1;
 }
 
+/* Ex.4 Tranforma um arquivo.txt em mapa. */
 
-int main (){
+
+int main (int argc, int **argv){
     float media;
     int numChar;
     FILE *arqIn;// *arqOut;
 
-    if ( !(arqIn = fopen("numeros", "r")) )
+    if ( !(arqIn = fopen("minusc", "r")) )
         return 1;
-    if ( !(arqOut = fopen("maiusc", "w")) )
-        return 1;
-
-    
+    //if ( !(arqOut = fopen("maiusc", "w+")) )
+    //    return 1;
 
     //numChar = num_caracteres(arqIn);
     //rewind(arqIn); // retorna o ponteiro da stream para o local inicial
