@@ -2,17 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE 100
-#define NULL_CHAR '\0'
+#define MAX_LINE 1024
+#define NULL_CHAR 0
 
 /* Ex.1 Retorna um inteiro representando o numero de caracteres do arquivo FILE. */
 int num_caracteres(FILE *a){
-    int numChar;
+    int numChar, i;
     char c;
 
+    numChar = 0;
+
     c = fgetc(a);
-    for(numChar = 1; c != EOF; numChar++)
+    for(i = 0; (c != EOF); i++){
+        if (c != 10 )
+            numChar++;
         c = fgetc(a);
+    }
 
     return numChar;
 }
@@ -33,45 +38,76 @@ float converte_str_flt(char *s){
 /* Ex.2 Retorna a media do valor dos inteiros de cada linha do arquivo. */
 float media_arqv(FILE *a){
     float media, acc; 
-    char *s;
+    char line[MAX_LINE+1];
     int i; 
 
-    if ( !(s = malloc(sizeof(char)*MAX_LINE)))
-        return -666;
 
     i = 1;
+    acc = 0;
 
-    fgets(s, MAX_LINE, a);
-    acc = converte_str_flt(s);
+    fgets(line, MAX_LINE, a);
+    line[strcspn(line, "\n")] = 0;
+
+    acc += converte_str_flt(line);
     while ( !feof(a) ){
-        acc += converte_str_flt(s);
-        puts(s);
-        fgets(s, MAX_LINE, a);
+        printf("%s", line);
+        fgets(line, MAX_LINE, a);
+        line[strcspn(line, "\n")] = 0;
+        acc += converte_str_flt(line);
         i++;
     }
     
     media = acc / i;
 
-    free(s);
     return media;
+}
+
+
+/* Verifica se o caractere eh minusculo. */
+int verifica_char(char c){
+    if ( (c >= 97 && c <= 122))
+        return 1;
+    return 0;
+}
+
+
+/* Ex.3 Transforma os caracteres minusculos em maiusculos do arquivo 'a1
+   no arqvuivo 'a2'. */
+int converte_txt_maiusc(FILE *a1, FILE *a2){
+    char c;
+
+    c = fgetc(a1);
+    while ( c != EOF ){
+        if ( verifica_char(c) )
+            fputc(c-32, a2);
+        else
+            fputc(c, a2);
+    }
+
+    return 1;
 }
 
 
 int main (){
     float media;
     int numChar;
-    FILE *a;
+    FILE *arqIn, *arqOut;
 
-    if ( !(a = fopen("numeros", "r")) )
+    if ( !(arqIn = fopen("poema", "r")) )
         return 1;
+    if ( !(arqOut = fopen("maiusc", "w")) )
+        return 1;
+
     
 
-    numChar = num_caracteres(a);
-    media = media_arqv(a);
+    //numChar = num_caracteres(a);
+    //media = media_arqv(a);
     
-    printf("Num de caracteres: %d\n", numChar);
-    printf("media do val do arqv: %f\n", media);
+    //printf("Num de caracteres: %d\n", numChar);
+    //printf("media do val do arqv: %f\n", media);
+    converte_txt_maiusc(arqIn, arqOut);
 
-    fclose(a);
+    fclose(arqIn);
+    fclose(arqOut);
     return 0;
 }
