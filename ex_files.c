@@ -1,3 +1,9 @@
+/* 
+ * Exercicios da disciplina de Prog2 - Manipulacao de Arquivos em C
+ * Autor: Joao Vitor de Oliveira Souza
+ * 29/03/23
+ * Os exercicios estao aqui: "https://wiki.inf.ufpr.br/maziero/doku.php?id=prog2:acesso_a_arquivos"
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -106,28 +112,80 @@ int converte_txt_maiusc(FILE *a1, FILE *a2){
     return 1;
 }
 
-/* Ex.4 Tranforma um arquivo.txt em mapa. */
+/* Ex.4 Cria uma matriz de lin x col. */
+char **cria_matriz_char(int lin, int col){
+	char **c;
+	int i;
+	
+	if ( !(c = (char **)malloc(sizeof(char *) * lin) ) )
+		return NULL;
+	
+	for (i=0; i < lin ;i++)
+		if ( !(c[i] = (char *)malloc(sizeof(char) * col )) )
+			return NULL;
 
+	return c;
+}
 
-int main (int argc, int **argv){
-    float media;
-    int numChar;
-    FILE *arqIn;// *arqOut;
+/* Ex.4 Destoi libera a memoria de uma matriz e retorna NULL. */
+char **libera_matriz(char **c, int lin){
+	int i;
 
-    if ( !(arqIn = fopen("minusc", "r")) )
-        return 1;
-    //if ( !(arqOut = fopen("maiusc", "w+")) )
-    //    return 1;
+	for (i=0; i < lin ;i++)
+		free(c[i]);
+	
+	free(c);
+	return NULL;
+}
 
-    //numChar = num_caracteres(arqIn);
-    //rewind(arqIn); // retorna o ponteiro da stream para o local inicial
-    //media = media_arqv(arqIn);
+/* Ex.4 Imprime matriz. */
+void imprime_matriz(char **m, int lin, int col){
+	int i, j;
+
+	for (i=0; i < lin ;i++, printf("\n"))
+		for (j=0; j < col ;j++)
+			printf("%c", m[i][j]);
+}
+
+/* Ex.4 Tranforma um arquivo.txt em mapa em uma matriz e retorna
+   um ponteiro para a mesma. */
+char **cria_mapa(FILE *a){
+	char line[MAX_LINE + 1], **mapa;
+	int lin, col, i, j;
+	
+	// Extrai os inteiros que indentificam linha x  coluna da primeira linha
+	fscanf(a, "%d %d", &lin, &col);
+	mapa = cria_matriz_char(lin, col);
+
+	i = 0;
+	fgets(line, MAX_LINE, a);
+	while (i < lin){
+		fgets(line, MAX_LINE, a);
+		for (j=0; j < col ;j++){
+			mapa[i][j] = line[j];
+		}
+		
+		i++;
+	}
+
+	rewind(a);
+	return mapa;
+}
+
+int main (int argc, char *argv[]){
+    int col, lin;
+	FILE *arqIn;
+	char **mapa;
+
+    if ( !(arqIn = fopen("mapa.txt", "r")) )
+		return 1;
     
-    //printf("Num de caracteres: %d\n", numChar);
-    //printf("media do val do arqv: %f\n", media);
-    converte_txt_maiusc(arqIn, arqOut);
+	mapa = cria_mapa(arqIn);
+	fscanf(arqIn, "%d %d", &lin, &col);
+	
+	imprime_matriz(mapa, lin, col);
 
+	mapa = libera_matriz(mapa, lin);
     fclose(arqIn);
-    fclose(arqOut);
     return 0;
 }
